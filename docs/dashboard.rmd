@@ -7,5 +7,11 @@ output: flexdashboard::flex_dashboard
 library(flexdashboard)
 library(ggplot2)
 library(plotly)
+# Load processed data and models (adjust paths if needed)
 forest_data <- read.csv("../data/processed/forest_data_processed.csv")
 test_data <- read.csv("../data/processed/test_forest_with_anomalies.csv")
+rf_model <- readRDS("../data/processed/rf_forest_model.rds")
+# Calculate metrics
+rf_pred <- predict(rf_model, test_data)
+rmse_val <- round(RMSE(rf_pred, test_data$Forest_Area_sqkm), 2)
+anomaly_rate <- round(mean(test_data$anomaly == "Anomaly"), 2)
