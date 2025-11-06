@@ -1,0 +1,11 @@
+---
+title: "Indian Forest Cover Anomaly Dashboard"
+output: flexdashboard::flex_dashboard
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(plotly)
+forest_data <- read.csv("../data/processed/forest_data_processed.csv")
+test_data <- read.csv("../data/processed/test_forest_with_anomalies.csv")
