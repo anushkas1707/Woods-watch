@@ -1,0 +1,27 @@
+library(dplyr)
+
+# Load forest data
+if (file.exists("data/raw/indian_forest_data_2011_2021.csv")) {
+  forest_data <- read.csv("data/raw/indian_forest_data_2011_2021.csv")
+} else {
+  stop("Forest data file not found in data/raw/")
+}
+
+# Preprocessing
+forest_data <- forest_data %>%
+  mutate(
+    Forest_Cover_Percentage = (Forest_Area_sqkm / Geographical_Area_sqkm) * 100,  # New feature
+    State = as.factor(State),
+    Year = as.numeric(Year)
+  ) %>%
+  na.omit()
+
+# Normalize features
+preproc <- caret::preProcess(forest_data[, c("Forest_Area_sqkm", "Geographical_Area_sqkm", "Forest_Cover_Percentage")], method = c("center", "scale"))
+forest_data_scaled <- predict(preproc, forest_data)
+
+# Save processed data
+dir.create("data/processed", showWarnings = FALSE)
+write.csv(forest_data_scaled, "data/processed/forest_data_processed.csv", row.names = FALSE)
+
+cat("Forest data cleaned and saved.\n")
